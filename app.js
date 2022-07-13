@@ -31,9 +31,6 @@ const item3 = new Item({
 
 const defaultItems = [item1, item2, item3];
 
-
-
-
 app.get("/", function(req, res) {
   Item.find({}, function(err, foundItems) {
     if (foundItems.length === 0) {
@@ -52,16 +49,34 @@ app.get("/", function(req, res) {
   });
 });
 
+app.get("/:customListName", function(req, res) {
+  const customListName = req.body.customListName;
+  res.render("todo", {
+
+  });
+})
+
 app.post("/", function(req, res){
 
   const itemName = req.body.newItem;
-  const new 
+  const item = new Item ({
+    name: itemName
+  });
+  item.save();
+  res.redirect("/");
 
 });
 
-app.get("/work", function(req,res){
-
-  res.render("list", {listTitle: "Today", newListItems: workItems});
+app.post("/delete", function(req, res) {
+  const checkedItemId = req.body.checkbox;
+  Item.findByIdAndRemove(checkedItemId, function(err) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Delete from database successful");
+      res.redirect("/");
+    }
+  });
 });
 
 app.get("/about", function(req, res){
